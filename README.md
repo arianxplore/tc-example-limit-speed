@@ -1,19 +1,3 @@
-Looking at your shell history, you did this **manually with `tc` commands** — there's no config file. But you do have scripts in `/home/manage/`. Let me check:## Where the config lives
-
-**There is no config file.** You built this with raw `tc` commands, and the current state is only in the kernel. Your scripts in `/home/manage/` are:
-
-- **`reload.sh`** — applies the shaping rules
-- **`freelimit.sh`** — removes all rules
-
----
-
-## Run this to see exactly what `reload.sh` contains now:
-
-```bash
-cat reload.sh
-```
-
-That's almost certainly where your full setup is. Based on your history, the commands you ran were something like:
 
 ```bash
 # 1. Load IFB module for inbound shaping
@@ -46,6 +30,9 @@ tc class add dev ifb0 parent 2:1 classid 2:20 htb rate 1200kbit ceil 1200kbit
 ```bash
 tc filter show dev ens33
 tc filter show dev ifb0
+###
+tc class show dev ens33
+tc class show dev ifb0
 ```
 
 This will show which IPs/ports/marks land in class `1:20` (throttled) vs `1:10` (full speed). **Run `cat reload.sh` first** — that's your source of truth.
